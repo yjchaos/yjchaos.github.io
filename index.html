@@ -229,6 +229,244 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/10/java基础加强-集合2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaojun">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小六仔的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/10/java基础加强-集合2/" itemprop="url">java基础加强-集合(二) 具体的集合</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-10T11:26:46+08:00">
+                2018-04-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/collection/" itemprop="url" rel="index">
+                    <span itemprop="name">collection</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <div align="left"><br>    <img src="/images/java基础加强-集合(二)/Classes in the collections framework.png" alt="Classes in the collections framework"><br></div>
+
+<h1 id="Linked-Lists"><a href="#Linked-Lists" class="headerlink" title="Linked Lists"></a>Linked Lists</h1><p><code>ArrayList</code>有一个很大的缺陷：在中间删除一个元素的开销是非常大的，因为删除完该元素后，后面的元素都得往前移动，插入同理。</p>
+<div align="left"><br>    <img src="/images/java基础加强-集合(二)/Removing an element from an array.png" alt="Removing an element from an array"><br></div>
+
+<p><code>LinkedList</code>解决了这个问题。<code>ArrayList</code>中的元素是顺序存储的，而<code>LinkedList</code>的元素存在一个个结点中，每个结点都包含对下一个结点的引用和对上一个结点的引用。</p>
+<div align="left"><br>    <img src="/images/java基础加强-集合(二)/A doubly linked list.png" alt="A doubly linked list"><br></div>
+
+<p>这样，删除中间某个元素的操作就只需将改元素前后两个元素连接起来即可。</p>
+<div align="left"><br>    <img src="/images/java基础加强-集合(二)/Removing an element from a linked list.png" alt="Removing an element from a linked list"><br></div>
+
+<p><code>ListIterator</code>作为<code>Iterator</code>的子接口，为<code>List</code>额外提供了下面一系列方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">hasPrevious</span><span class="params">()</span></span></span><br><span class="line"><span class="function">E <span class="title">previous</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nextIndex</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">previousIndex</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span></span></span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractList</code>定义了<code>listIterator</code>方法用来返回一个<code>ListIterator</code>的具体实现。</p>
+<p>下面我们来加深一下对迭代器在<code>List</code>中添加删除元素的理解。我们用<code>|</code>来标注迭代器的位置。假设现在我们有一个<code>List</code>是<code>ABCD</code>，我们可以通过<code>iterator</code>方法或者<code>listIterator</code>方法获取到迭代器。</p>
+<table>
+<thead>
+<tr>
+<th>元素</th>
+<th style="text-align:center">操作</th>
+<th style="text-align:right">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#124;ABCD</td>
+<td style="text-align:center">next</td>
+<td style="text-align:right">A&#124;BCD</td>
+</tr>
+<tr>
+<td>A&#124;BCD</td>
+<td style="text-align:center">remove</td>
+<td style="text-align:right">&#124;BCD</td>
+</tr>
+<tr>
+<td>&#124;BCD</td>
+<td style="text-align:center">next</td>
+<td style="text-align:right">B&#124;CD</td>
+</tr>
+<tr>
+<td>B&#124;CD</td>
+<td style="text-align:center">remove</td>
+<td style="text-align:right">&#124;CD</td>
+</tr>
+<tr>
+<td>&#124;CD</td>
+<td style="text-align:center">add(E)</td>
+<td style="text-align:right">E&#124;CD</td>
+</tr>
+<tr>
+<td>E&#124;CD</td>
+<td style="text-align:center">add(F)</td>
+<td style="text-align:right">EF&#124;CD</td>
+</tr>
+<tr>
+<td>EF&#124;CD</td>
+<td style="text-align:center">next</td>
+<td style="text-align:right">EFC&#124;D</td>
+</tr>
+<tr>
+<td>EFC&#124;D</td>
+<td style="text-align:center">set(G)</td>
+<td style="text-align:right">EFG&#124;D</td>
+</tr>
+</tbody>
+</table>
+<font color="red">综上，迭代器本身并不表示任何一个元素，它只能标识位置。<code>add</code>方法只依赖与迭代器的位置，而<code>remove</code>和<code>set</code>方法依赖迭代器的状态。所以在调用<code>remove</code>和<code>set</code>之前必须先调用<code>next</code>或者<code>previous</code>方法，因为这两个方法会返回元素。而<code>add</code>方法没有限制，它表示在迭代器位置前插入一个元素，连续插入时，元素的顺序与插入顺序一致。</font>
+
+<p>并发的问题：</p>
+<blockquote>
+<p>在<code>AbstractList</code>中定义了<code>modCount</code>字段，所有<code>add</code>和<code>remove</code>操作都会使<code>modCount</code>+1。当通过<code>iterator</code>或者<code>listIterator</code>方法获取迭代器时，迭代器中的<code>expectedModCount</code>字段会被初始化为<code>modCount</code>。所以，当别的迭代器或者集合方法改变了<code>modCount</code>值后，就会导致之前迭代器的<code>expectedModCount</code>和<code>modCount</code>值不一样，此时再使用之前迭代器就会报<code>ConcurrentModificationException</code>异常</p>
+</blockquote>
+<h1 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h1><p>与<code>LinkedList</code>以结点存储元素不同，<code>ArrayList</code>底层使用数组来存储元素。</p>
+<p>所以，如果你要用索引来获取元素，那么不要用<code>LinkedList</code>，因为<code>LinkedList</code>必须用迭代器来获取元素（<code>LinkedList</code>也提供了<code>get(int index)</code>方法，但这个方法时效率很低的）</p>
+<p><code>Vector</code>我们不经常使用，它的底层实现也是数组，它和<code>ArrayList</code>的不同之处在于它的所有方法都是同步的。</p>
+<h1 id="HashSets（散列集）"><a href="#HashSets（散列集）" class="headerlink" title="HashSets（散列集）"></a>HashSets（散列集）</h1><p>散列表是一种能够快速找到元素的集合。这种数据结构会为每个元素计算一个散列码，通过散列码来定位元素在它内部数组中的位置。</p>
+<p>如果你要向散列表中添加你自定义的类型。那么你必须实现<code>hashCode</code>方法和<code>equals</code>方法，而且要保证相等元素必定有相同的散列码。</p>
+<p>java实现散列表的方式：</p>
+<blockquote>
+<p>链表的数组，每一个链表被称为一个桶(bucket)。当你向散列表中添加元素时，首先会计算元素的散列码，比如计算出来的散列码为<code>76268</code>，而此时桶的总数量为<code>128</code>，那么我们就可以计算出元素所在桶的索引为<code>76268 % 128 = 108</code>，如果此时索引为<code>108</code>的这个桶是空的，那么直接将新元素添加进链表，反之，我们称为散列冲突（hash collision），需要将新对象和桶中的所有元素一一比较来确定对象是否存在。如果散列码是合理的随机分布的，而且桶的数量足够大，那么冲突的机会会很少。</p>
+</blockquote>
+<div align="left"><br>    <img src="/images/java基础加强-集合(二)/A hash table.png" alt="A hash table"><br>    <br><br>    <p><i><b>一个散列表</b></i></p><br></div>
+
+<p>如果你想更好的掌控散列表的额性能，你可以自己设置桶的初始数量，推荐值是总元素个数的75%~150%，当然你不会总是知道散列表中最终有多少个元素，此时就用默认值好了。java散列表桶的数量总是被设为2的幂，默认初始值为16，你设置的值总会被自动转为2的下一个幂。<br>当添加的元素过多，会导致散列冲突增加，影响性能。所以还有一个参数叫装填因子（load factor），默认值为0.75，它定义了一个散列表何时再散列 （rehashed)。比如当装填因子为0.75时，如果已经使用的桶的数量超过75%，就会触发再散列，此时会将桶的总数扩大至2倍。对于大多数应用程序来说， 装填因子为0.75 是比较合理的。</p>
+<blockquote>
+<p>java8中，桶满时（链表的元素大于8），链表会转为红黑树</p>
+</blockquote>
+<h1 id="Tree-Sets-树集"><a href="#Tree-Sets-树集" class="headerlink" title="Tree Sets(树集)"></a>Tree Sets(树集)</h1><p><code>TreeSet</code>类与散列表十分相似，有一点改进就是它是一个有序集合。</p>
+<p>你在使用<code>TreeSet</code>时，要么集合中的元素是可比较的（实现了<code>Comparable</code>接口，提供了<code>compareTo</code>方法），要么在创建<code>TreeSet</code>的时候传入一个比较器（<code>Comparator</code>的实现）。</p>
+<p>多提一点，排序是基于树结构的（目前的实现方式是红黑树）</p>
+<blockquote>
+<p>从 JavaSE 6 起， TreeSet 类实现了 NavigableSet 接口。 这个接口增加了几个便于定位元素以及反向遍历的方法。</p>
+</blockquote>
+<h1 id="Queues-and-Deques-队列与双端队列"><a href="#Queues-and-Deques-队列与双端队列" class="headerlink" title="Queues and Deques(队列与双端队列)"></a>Queues and Deques(队列与双端队列)</h1><p>前面已经讨论过， 队列可以让人们有效地在尾部添加一个元素， 在头部删除一个元素。有两个端头的队列， 即双端队列， 可以让人们有效地在头部和尾部同时添加或删除元素。不支持在队列中间添加元素。在 Java SE 6 中引人了 Deque 接口， 并由 ArrayDeque 和LinkedList 类实现。这两个类都提供了双端队列，而且在必要时可以增加队列的长度。</p>
+<h1 id="Priority-Queues-优先级队列"><a href="#Priority-Queues-优先级队列" class="headerlink" title="Priority Queues(优先级队列)"></a>Priority Queues(优先级队列)</h1><p>优先级队列不排序。它的底层通过二叉小顶堆实现。进行<code>add</code>和<code>remove</code>操作是都会使优先级最小的元素滑落到根节点，这样你每次在获取元素的时候，总是得到优先级最小的</p>
+<blockquote>
+<p>上面说的优先级是说值，习惯上值小优先级高</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/04/java基础加强-集合1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1703,7 +1941,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
