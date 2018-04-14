@@ -229,6 +229,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/12/java基础加强-集合3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaojun">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小六仔的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/12/java基础加强-集合3/" itemprop="url">java基础加强-集合（三）映射</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-12T10:01:01+08:00">
+                2018-04-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/collection/" itemprop="url" rel="index">
+                    <span itemprop="name">collection</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h1><h2 id="基本映射操作"><a href="#基本映射操作" class="headerlink" title="基本映射操作"></a>基本映射操作</h2><p>Java 类库为映射提供了两个通用的实现： HashMap 和 TreeMap 。这两个类都实现了 Map 接口。</p>
+<p>散列映射（hash map）对键进行散列， 树映射（tree map）用键值对元素进行排序， 并将其组织成搜索树。散列或比较函数只能作用于键。与键关联的值不能进行散列或比较。</p>
+<p>键和值都允许为null。当使用<code>get(Object key)</code>方法获取元素时，若<code>key</code>不存在，则返回null。你也可以使用<code>getOrDefault(Object key, V defaultValue)</code>方法指定一个当<code>key</code>不存在时的默认值，一点要注意的是若<code>key</code>存在，而对应的<code>value</code>为null，此时返回null，不会返回你指定的默认值。</p>
+<p>映射中的<code>key</code>必须唯一，如果<code>key</code>值相同，那么后<code>put</code>的<code>value</code>将会取代先前的<code>value</code>。</p>
+<p>要迭代处理映射的键和值， 最容易的方法是使用 forEach 方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scores.forEach((k, v) -&gt;</span><br><span class="line">    System.out.println(<span class="string">"key="</span> + k + <span class="string">", value="</span> + v));</span><br></pre></td></tr></table></figure></p>
+<h2 id="更新映射项"><a href="#更新映射项" class="headerlink" title="更新映射项"></a>更新映射项</h2><p>更新元素最简单的方法自然是<code>V put(K key, V value)</code>，但是如果我们是要对其中的元素值进行一些操作的话，可能还有更好的选择。</p>
+<ul>
+<li>merge</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">merge</span><span class="params">(K key, V value, BiFunction&lt;? <span class="keyword">super</span> V,? <span class="keyword">super</span> V,? extends V&gt; remappingFunction)</span></span></span><br></pre></td></tr></table></figure>
+<p><code>merge</code>方法的作用是：如果<code>get(key)</code>不为null，那么会将<code>get(key)</code>和<code>value</code>作为<code>remappingFunction</code>方法的参数，<code>remappingFunction</code>的返回值作为结果重新和<code>key</code>绑定；反之如果如果<code>get(key)</code>为null，那么会直接<code>put(key,value)</code>。如果<code>remappingFunction</code>的返回值为null，则会删除该元素。例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//统计单词出现的次数</span></span><br><span class="line">counts.merge(word,<span class="number">1</span>,Integer::sum);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">compute</span><span class="params">(K key, BiFunction&lt;? <span class="keyword">super</span> K,? <span class="keyword">super</span> V,? extends V&gt; remappingFunction)</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>compute</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">compute</span><span class="params">(K key, BiFunction&lt;? <span class="keyword">super</span> K,? <span class="keyword">super</span> V,? extends V&gt; remappingFunction)</span></span></span><br></pre></td></tr></table></figure>
+<p><code>compute</code>方法的作用是将<code>key</code>和<code>get(key)</code>作为参数传给<code>remappingFunction</code>方法，<code>remappingFunction</code>方法的返回值作为结果和<code>key</code>绑定，若<code>get(key)</code>为null，则会新创建一个元素<code>put</code>到map里。如果<code>remappingFunction</code>的返回值为null，则会删除该元素。</p>
+<ul>
+<li>computeIfPresent</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">computeIfPresent</span><span class="params">(K key, BiFunction&lt;? <span class="keyword">super</span> K,? <span class="keyword">super</span> V,? extends V&gt; remappingFunction)</span></span></span><br></pre></td></tr></table></figure>
+<p><code>computeIfPresent</code>方法与<code>compute</code>方法的不同点在于：<code>computeIfPresent</code>方法只有在<code>get(key)</code>不为null的情况下，才会去做<code>remappingFunction</code></p>
+<ul>
+<li>computeIfAbsent</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">computeIfAbsent</span><span class="params">(K key, Function&lt;? <span class="keyword">super</span> K,? extends V&gt; mappingFunction)</span></span></span><br></pre></td></tr></table></figure>
+<p><code>computeIfAbsent</code>方法的作用是如果<code>get(key)</code>为null，则将<code>key</code>做为参数传给<code>mappingFunction</code>,<code>mappingFunction</code>方法的返回值作为结果和<code>key</code>绑定，若<code>mappingFunction</code>方法的返回值为null，则什么也不做。</p>
+<ul>
+<li>replaceAll</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">replaceAll</span><span class="params">(BiFunction&lt;? <span class="keyword">super</span> K,? <span class="keyword">super</span> V,? extends V&gt; function)</span></span></span><br></pre></td></tr></table></figure>
+<p>用<code>function</code>函数的结果替换每个<code>entry</code></p>
+<h2 id="映射视图（Map-Views）"><a href="#映射视图（Map-Views）" class="headerlink" title="映射视图（Map Views）"></a>映射视图（Map Views）</h2><p>有3种视图：键集、值集合（不是一个集）以及键 / 值对集。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span></span></span><br><span class="line"><span class="function">Collection&lt;V&gt; <span class="title">values</span><span class="params">()</span></span></span><br><span class="line"><span class="function">Set&lt;Map.Entry&lt;K, V&gt;&gt; <span class="title">entrySet</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure></p>
+<p><code>keySet()</code>返回的并不是一个<code>HashSet</code>或者<code>TreeSet</code>,而是实现了 <code>Set</code> 接口的另外某个类的对象。 <code>Set</code> 接口扩展了 <code>Collection</code> 接口。因此， 可以像使用集合一样使用 <code>keySet</code>。例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Set&lt;String&gt; keys = map.keySet();</span><br><span class="line"><span class="keyword">for</span> (String key : keys)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//do something with key</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果想同时查看键和值， 可以通过枚举条目来避免查找值。使用以下代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Map.Entry&lt;String, Employee&gt; entry : staff.entrySet())</span><br><span class="line">&#123;</span><br><span class="line">    String k = entry.getKey();</span><br><span class="line">    Employee v = entry.getValue();</span><br><span class="line">    <span class="comment">//do something with k, v</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>原先上面的方法是访问所有映射条目的最高效的方法。如今，只需要使用 forEach 方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">counts.forEach((k， v) -&gt; &#123;</span><br><span class="line">    <span class="comment">//dosomethingwith k, v</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>如果在键集视图上调用迭代器的 remove 方法， 实际上会从映射中删除这个键和与它关联的值。不过，不能向键集视图增加元素。另外， 如果增加一个键而没有同时增加值也是没有意义的。 如果试图调用 add 方法， 它会抛出一个 UnsupportedOperationException。 条目集视图有同样的限制。</p>
+<h2 id="弱散列映射（Weak-Hash-Maps）"><a href="#弱散列映射（Weak-Hash-Maps）" class="headerlink" title="弱散列映射（Weak Hash Maps）"></a>弱散列映射（Weak Hash Maps）</h2><p>设计 <code>WeakHashMap</code> 类是为了解决一个有趣的问题。 一个值，对应的键已经不再使用了，为了使它能被垃圾回收器回收，我们可以用<code>WeakHashMap</code> 类。</p>
+<h2 id="链接散列集与映射（Linked-Hash-Sets-and-Maps）"><a href="#链接散列集与映射（Linked-Hash-Sets-and-Maps）" class="headerlink" title="链接散列集与映射（Linked Hash Sets and Maps）"></a>链接散列集与映射（Linked Hash Sets and Maps）</h2><p><code>LinkedHashSet</code> 和 <code>LinkedHashMap</code> 类用来记住插人元素项的顺序。当条目插入到表中时，就会并人到双向链表中。</p>
+<div align="left"><br>    <img src="/images/java基础加强-集合(三)/A linked hash table.png" alt="A linked hash table"><br></div>
+
+<p>默认的情况下，遍历键集、值集合、键 / 值对集的时候是按插入顺序来的。但是如果你是用下面的方法创建的<code>LinkedHashMap</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LinkedHashMap&lt;K, V&gt;(initialCapacity, loadFactor, <span class="keyword">true</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>true</code>表示使用access-order，此时对元素进行<code>get</code>和<code>put</code>操作，都会使元素被放到链表尾部。它的用处在于可以用来实现高速缓存，我们可以构造一<code>LinkedHashMap</code>的子类，然后覆盖下面这个方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry&lt;K, V&gt; eldest)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>当函数返回<code>true</code>时会自动删除eldest元素。</p>
+<h2 id="枚举集与映射（Enumeration-Sets-and-Maps）"><a href="#枚举集与映射（Enumeration-Sets-and-Maps）" class="headerlink" title="枚举集与映射（Enumeration Sets and Maps）"></a>枚举集与映射（Enumeration Sets and Maps）</h2><p><code>EmumSet</code> 是一个枚举类型元素集的高效实现。 由于枚举类型只有有限个实例， 所以<code>EnumSet</code> 内部用位序列实现。如果对应的值在集中， 则相应的位被置为 1。</p>
+<p><code>EnumSet</code> 类没有公共的构造器。可以使用静态工厂方法构造这个集：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Weekday &#123; MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY &#125;;</span><br><span class="line">EnumSet&lt;Weekday&gt; always = EnumSet.allOf(Weekday.class);</span><br><span class="line">EnumSet&lt;Weekday&gt; never = EnumSet.noneOf(Weekday.class);</span><br><span class="line">EnumSet&lt;Weekday&gt; workday = EnumSet.range(Weekday.MONDAY, Weekday.FRIDAY);</span><br><span class="line">EnumSet&lt;Weekday&gt; mwf = EnumSet.of(Weekday.MONDAY, Weekday.WEDNESDAY, Weekday.FRIDAY);</span><br></pre></td></tr></table></figure></p>
+<p>EnumMap 是一个键类型为枚举类型的映射。它可以直接且高效地用一个值数组实现。在使用时， 需要在构造器中指定键类型：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EnumMap&lt;Weekday, Employee&gt; personInCharge = <span class="keyword">new</span> EnumMap&lt;&gt;(Weekday.class);</span><br></pre></td></tr></table></figure></p>
+<h2 id="标识散列映射-Identity-Hash-Maps"><a href="#标识散列映射-Identity-Hash-Maps" class="headerlink" title="标识散列映射(Identity Hash Maps)"></a>标识散列映射(Identity Hash Maps)</h2><p>类 <code>IdentityHashMap</code> 有特殊的作用。在这个类中， 键的散列值不是用 <code>hashCode</code> 函数计算<br>的， 而是用 <code>System.identityHashCode</code> 方法计算的。 这是 <code>Object.hashCode</code> 方法根据对象的内存地址来计算散列码时所使用的方式。 而且， 在对两个对象进行比较时，<code>IdentityHashMap</code> 类使用 ==, 而不使用 equals。也就是说， 不同的键对象， 即使内容相同， 也被视为是不同的对象。 </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/10/java基础加强-集合2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1941,7 +2130,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
