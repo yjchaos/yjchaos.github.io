@@ -229,6 +229,186 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/14/java基础加强-集合4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaojun">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小六仔的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/14/java基础加强-集合4/" itemprop="url">java基础加强-集合（四）视图与包装器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-14T11:41:17+08:00">
+                2018-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/collection/" itemprop="url" rel="index">
+                    <span itemprop="name">collection</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="视图与包装器（Views-and-Wrappers）"><a href="#视图与包装器（Views-and-Wrappers）" class="headerlink" title="视图与包装器（Views and Wrappers）"></a>视图与包装器（Views and Wrappers）</h1><p>看了集合的接口图和类图可能会感觉： 用如此多的接口和抽象类来实现数量并不多的具体集合类似乎没有太大必要。然而， 这两张图并没有展示出全部的情况。通过使用视图( views) 可以获得其他的实现了 <code>Collection</code> 接口和 <code>Map</code> 接口的对象。映射类的 <code>keySet</code> 方法就是一个这样的示例。初看起来， 好像这个方法创建了一个新集， 并将映射中的所有键都填进去，然后返回这个集。但是， 情况并非如此。取而代之的是： <code>keySet</code> 方法返回一个实现 <code>Set</code> 接口的类对象， 这个类的方法对原映射进行操作。这种集合称为视图。</p>
+<h2 id="轻量级集合包装器-Lightweight-Collection-Wrappers"><a href="#轻量级集合包装器-Lightweight-Collection-Wrappers" class="headerlink" title="轻量级集合包装器(Lightweight Collection Wrappers)"></a>轻量级集合包装器(Lightweight Collection Wrappers)</h2><ul>
+<li><code>Arrays</code>的<code>asList</code></li>
+</ul>
+<p><code>Arrays</code> 类的静态方法 <code>asList</code> 将返回一个包装了普通 Java 数组的 List 包装器。这个方法可以将数组传递给一个期望得到列表或集合参数的方法。例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Card[] cardOeck = <span class="keyword">new</span> Card[<span class="number">52</span>];</span><br><span class="line">List&lt;Card&gt; cardList = Arrays.asList(cardDeck):</span><br></pre></td></tr></table></figure></p>
+<p>返回的对象不是 ArrayList。它是一个视图对象， 带有访问底层数组的 get 和 set方法。改变数组大小的所有方法（例如，与迭代器相关的 add 和 remove 方法）都会抛出一个<code>Unsupported OperationException</code> 异常。</p>
+<p><code>asList</code> 方法可以接收可变数目的参数。例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; names = Arrays.asList(<span class="string">"Amy"</span>, <span class="string">"Bob"</span>, <span class="string">"Carl"</span>);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>Collections.nCopies</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Collections.nCopies(n, anObject)</span><br></pre></td></tr></table></figure>
+<p>将返回一个实现了 <code>List</code> 接口的不可修改的对象， 并给人一种包含n个元素， 每个元素都像是<br>一个 anObject 的错觉。<br>例 如，下面的调用将创建一个包含100个字符串的<code>List</code>, 每串都被设置为”DEFAULT”：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; settings = Collections.nCopies(<span class="number">100</span>, <span class="string">"DEFAULT"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>存储代价很小。这是视图技术的一种巧妙应用。</p>
+<ul>
+<li><code>Collections.singleton(anObject)</code></li>
+</ul>
+<p>将返回一个视图对象。这个对象实现了 <code>Set</code> 接口（与产生 <code>List</code> 的 <code>ncopies</code> 方法不同）。返回的对象实现了一个不可修改的单元素集。 <code>singletonList</code>方法与 <code>singletonMap</code> 方法类似。</p>
+<ul>
+<li>空集 </li>
+</ul>
+<p>类似地，对于集合框架中的每一个接口，还有一些方法可以生成空集、 列表、 映射， 等<br>等。特别是， 集的类型可以推导得出：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set&lt;String&gt; deepThoughts = Collections.emptySet() ;</span><br></pre></td></tr></table></figure></p>
+<h2 id="子范围-Subranges"><a href="#子范围-Subranges" class="headerlink" title="子范围(Subranges)"></a>子范围(Subranges)</h2><p>获得一个列表的子范围视图:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List group2 = staff.subList(<span class="number">10</span>, <span class="number">20</span>)</span><br></pre></td></tr></table></figure></p>
+<p>第一个索引包含在内， 第二个索引则不包含在内。<br>可以将任何操作应用于子范围，并且能够自动地反映整个列表的情况。 例如，可以删除整个子范围：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">group2.clear(); <span class="comment">// staff reduction</span></span><br></pre></td></tr></table></figure></p>
+<p><code>staff</code> 列表中的相应元素被清除了， 并且 <code>group2</code> 为空。</p>
+<p>对于有序集和映射， 可以使用排序顺序而不是元素位置建立子范围。<code>SortedSet</code> 接口声明了 3 个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SortedSet&lt; E&gt; subSet(E from, E to)</span><br><span class="line">SortedSet&lt; E&gt; headSet(E to)</span><br><span class="line">SortedSet&lt; E&gt; <span class="function">tail <span class="title">Set</span><span class="params">(E from)</span></span></span><br></pre></td></tr></table></figure>
+<p>这些方法将返回大于等于 <code>from</code> 且小于 <code>to</code> 的所有元素子集。有序映射也有类似的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SortedMap&lt; K, V&gt; subMap(K from, K to)</span><br><span class="line"><span class="function">SortedMap&lt;K, V&gt; <span class="title">headMap</span><span class="params">(K to)</span></span></span><br><span class="line"><span class="function">SortedMap&lt;K, V&gt; tail <span class="title">Map</span><span class="params">(K from)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>返回映射视图， 该映射包含键落在指定范围内的所有元素。<br>Java SE 6 引人的 <code>NavigableSet</code> 接口赋予子范围操作更多的控制能力。可以指定是否包括边界：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">NavigableSet&lt;E&gt; <span class="title">subSet</span> <span class="params">( E from, <span class="keyword">boolean</span> fromlnclusive, E to, <span class="keyword">boolean</span> tolnclusive)</span></span></span><br><span class="line"><span class="function">NavigableSet&lt;E&gt; <span class="title">headSet</span><span class="params">(E to, <span class="keyword">boolean</span> tolnclusive)</span></span></span><br><span class="line"><span class="function">Navigab1eSet&lt;E&gt; tail <span class="title">Set</span><span class="params">(E from, <span class="keyword">boolean</span> fromlnclusive)</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="不可修改的视图-Unmodifable-Views"><a href="#不可修改的视图-Unmodifable-Views" class="headerlink" title="不可修改的视图(Unmodifable Views)"></a>不可修改的视图(Unmodifable Views)</h2><p>Collections 还有几个方法， 用于产生集合的不可修改视图 （ unmodifiable views)。这些视图对现有集合增加了一个运行时的检查。如果发现试图对集合进行修改， 就抛出一个异常，同时这个集合将保持未修改的状态。</p>
+<p>可以使用下面 8 种方法获得不可修改视图：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Collections.unmodifiableCollection(Collection&lt;? extends T&gt; c)</span><br><span class="line">Collections.unmodifiableList(List&lt;? extends T&gt; list)</span><br><span class="line">Collections.unmodifiableSet(Set&lt;? extends T&gt; s)</span><br><span class="line">Collections.unmodifiableSortedSet(SortedSet&lt;T&gt; s)</span><br><span class="line">Collections.unmodifiableNavigableSet(NavigableSet&lt;T&gt; s)</span><br><span class="line">Collections.unmodifiableMap(Map&lt;? extends K, ? extends V&gt; m)</span><br><span class="line">Collections.unmodifiableSortedMap(SortedMap&lt;K, ? extends V&gt; m)</span><br><span class="line">Collections.unmodifiableNavigableMap(NavigableMap&lt;K, ? extends V&gt; m)</span><br></pre></td></tr></table></figure></p>
+<p>每个方法都定义于一个接口。 例如，<code>Collections.unmodifiableList</code>的参数是<code>List&lt;? extends T&gt; list</code>，这样就可以与<code>ArrayList</code>、<code>LinkedList</code>或者任何实现了<code>List</code>接口的其他类一起协同工作。</p>
+<p>例如， 假设想要查看某部分代码， 但又不触及某个集合的内容， 就可以进行下列操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; staff = <span class="keyword">new</span> LinkedList() ;</span><br><span class="line">lookAt (Collections.unmodifiableList(staff));</span><br></pre></td></tr></table></figure>
+<p><code>Collections.unmodifiableList</code>方法将返回一个实现 <code>List</code> 接口的类对象。</p>
+<p>由于视图只是包装了接口而不是实际的集合对象， 所以只能访问接口中定义的方法。例如，<code>LinkedList</code>类有一些非常方便的方法，<code>addFirst</code> 和 <code>addLast</code>，它们都不是 <code>List</code> 接的方法，不能通过不可修改视图进行访问。</p>
+<h2 id="同步视图（Synchronized-Views）"><a href="#同步视图（Synchronized-Views）" class="headerlink" title="同步视图（Synchronized Views）"></a>同步视图（Synchronized Views）</h2><p><code>Collections</code>类有一系列的方法来得到一个集合的同步视图：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Collection&lt;T&gt; <span class="title">synchronizedCollection</span><span class="params">(Collection&lt;T&gt; c)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; List&lt;T&gt; <span class="title">synchronizedList</span><span class="params">(List&lt;T&gt; list)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;K,V&gt; Map&lt;K,V&gt; <span class="title">synchronizedMap</span><span class="params">(Map&lt;K,V&gt; m)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;K,V&gt; NavigableMap&lt;K,V&gt; <span class="title">synchronizedNavigableMap</span><span class="params">(NavigableMap&lt;K,V&gt; m)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; NavigableSet&lt;T&gt; <span class="title">synchronizedNavigableSet</span><span class="params">(NavigableSet&lt;T&gt; s)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Set&lt;T&gt; <span class="title">synchronizedSet</span><span class="params">(Set&lt;T&gt; s)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;K,V&gt; SortedMap&lt;K,V&gt; <span class="title">synchronizedSortedMap</span><span class="params">(SortedMap&lt;K,V&gt; m)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; SortedSet&lt;T&gt; <span class="title">synchronizedSortedSet</span><span class="params">(SortedSet&lt;T&gt; s)</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="关于可选操作的说明"><a href="#关于可选操作的说明" class="headerlink" title="关于可选操作的说明"></a>关于可选操作的说明</h2><p>在集合和迭代器接口的 API 文档中， 许多方法描述为“可选操作”。这看起来与接口的概念有所抵触。毕竟， 接口的设计目的难道不是负责给出一个类必须实现的方法吗？ 确实，从理论的角度看，在这里给出的方法很难令人满意。一个更好的解决方案是为每个只读视图和不能改变集合大小的视图建立各自独立的两个接口。不过， 这将会使接口的数量成倍增长，这让类库设计者无法接受。</p>
+<p>所谓“可选操作”存在的原因是因为许多视图并不支持所有操作，当尝试调用这些不支持的操作时，就会抛出<code>UnsupportedOperationException</code>异常</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/12/java基础加强-集合3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2130,7 +2310,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
